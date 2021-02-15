@@ -6,7 +6,7 @@
 - **What will the application do?**
 
 The application will store information about students personal attributes.
-Information will contain - Name, DOB, Gender, Major, sexual preference and a one line description about the student.
+Information will contain - Name, Age, Gender, Major, sexual preference and a one line description about the student.
 
 Possible Features include adding student profiles to the database, removing students from the database, updating 
 gender, major and sexual preferences. 
@@ -16,7 +16,7 @@ The main feature of the application will be to recommend students based on the u
 
 - **Who will use it?**
 
-The application is meant for students - to date, to make new friends, or to explore students as a whole.
+The application is for students - to date, to make new friends, or to explore students as a whole.
  
 - **Why is this project of interest to you?**
 
