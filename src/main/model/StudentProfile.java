@@ -11,8 +11,10 @@ public class StudentProfile {
 
     public StudentProfile(String studentName, int a, String g, String m,String s,String d) {
         name = studentName;
-        if (a >= 17) {
-            age = a;
+        if (a >= 18) {           // Below 18, you are a minor. Hence,  you are not eligible
+            age = a;             // for the DatingApp.
+        } else {
+            System.out.println("Age must be above 18");
         }
         gender = g;
         major = m;
@@ -46,12 +48,14 @@ public class StudentProfile {
         return sexuality;
     }
 
-    private char updateGender(char newGender) {
-        return newGender;
+    private String updateGender(String newGender) {
+        gender = newGender;
+        return gender;
     }
 
 
     private String updateSexuality(String newSexuality) {
+        sexuality = newSexuality;
         return newSexuality;
     }
 
