@@ -22,15 +22,20 @@ public class DatingApp {
     //Input.next = command;
     private void processCommand(String command) {
         if (command.equalsIgnoreCase("New Profile")) {
-            new StudentProfile();
+            newProfile();
         } else if (command.equalsIgnoreCase("Delete Profile")) {
-            StudentProfile student3 = new StudentProfile();
-            student3 = null;
+            deleteProfile();
         } else if (command.equals("Find Profile")) {
             findProfile();
         } else {
             System.out.println("Selection not valid...");
         }
+    }
+
+    private void deleteProfile() {
+    }
+
+    private void newProfile() {
     }
 
     private void findProfile() {
