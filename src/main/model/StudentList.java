@@ -30,8 +30,8 @@ public class StudentList {
         StudentList filteredList = new StudentList();
 
         for (StudentProfile i : studentList) {
-            if ((i.getGender() == gender && i.getAge() == age && i.getMajor() == major) ||
-                    i.getGender() == gender || i.getAge() == age || i.getMajor() == major) {
+            if ((i.getGender() == gender && i.getAge() == age && i.getMajor() == major)
+                    || i.getGender() == gender || i.getAge() == age || i.getMajor() == major) {
                 filteredList.addStudentProfile(i);
             }
         }
