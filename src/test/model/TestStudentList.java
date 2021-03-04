@@ -5,7 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class StudentListTest {
+public class TestStudentList {
 
     StudentList testStudentList;
     StudentProfile student1;
