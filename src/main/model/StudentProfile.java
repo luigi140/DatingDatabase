@@ -2,61 +2,85 @@ package model;
 
 public class StudentProfile {
 
-    private static String name;
-    String sexuality;
-    String gender;
-    String major;
-    String description;
-    int age;
+    private String name;
+    private String sexualPreference;
+    private String gender;
+    private String major;
+    private String description;
+    private int age;
 
-    public StudentProfile(String studentName, int a, String g, String m,String s,String d) {
-        name = studentName;
-        if (a >= 18) {           // Below 18, you are a minor. Hence,  you are not eligible
-            age = a;             // for the DatingApp.
+    public StudentProfile(String studentName, int age, String gender, String major,String sexualPreference,
+                          String description) {
+        this.name = studentName;
+        if (age >= 18) {           // Below 18, you are a minor. Hence,  you are not eligible
+            this.age = age;        // for the DatingApp.
         } else {
             System.out.println("Age must be above 18");
         }
-        gender = g;
-        major = m;
-        sexuality = s;
-        description = d;
-
+        this.gender = gender;
+        this.major = major;
+        this.sexualPreference = sexualPreference;
+        this.description = description;
     }
 
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     public int getAge() {
-        return age;
+        return this.age;
     }
 
     public String getGender() {
-        return gender;
+        return this.gender;
     }
 
     public String getDescription() {
-        return description;
+        return this.description;
     }
 
     public String getMajor() {
-        return major;
+        return this.major;
     }
 
-    public String getSexuality() {
-        return sexuality;
+    public String getSexualPreference() {
+        return this.sexualPreference;
     }
 
-    private String updateGender(String newGender) {
-        gender = newGender;
-        return gender;
+    public String setName(String updateName) {
+        this.name = updateName;
+        return this.name;
     }
 
+    public int setAge(int updateAge) {
+        if (updateAge >= 18) {           // Below 18, you are a minor. Hence,  you are not eligible
+            this.age = updateAge;        // for the DatingApp.
+        } else {
+            this.age = 0;
+            System.out.println("Age must be above 18");
+        }
+        return this.age;
+    }
 
-    private String updateSexuality(String newSexuality) {
-        sexuality = newSexuality;
-        return newSexuality;
+    public String setGender(String updateGender) {
+        this.gender = updateGender;
+        return this.gender;
+    }
+
+    public String setDescription(String updateDescription) {
+        this.description = updateDescription;
+        return this.description;
+    }
+
+    public String setMajor(String updateMajor) {
+        this.major = updateMajor;
+        return this.major;
+    }
+
+    public String setSexualPreference(String updateSexualPreference) {
+        this.sexualPreference = updateSexualPreference;
+        return this.sexualPreference;
     }
 
 

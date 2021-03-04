@@ -12,7 +12,7 @@ Possible Features include adding student profiles to the database, removing stud
 gender, major and sexual preferences. 
 
 The main feature of the application will be to recommend students based on the users preferences 
-(sexuality, age, major).
+(sexualPreference, age, major).
 
 - **Who will use it?**
 
