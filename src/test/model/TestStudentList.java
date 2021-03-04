@@ -70,10 +70,20 @@ public class TestStudentList {
                         "Computer Science").length());
     }
 
+    @Test
+    public void testFilterPreferencesWithEmptyStudentList() {
+
+        assertTrue(testStudentList.isEmpty());
+        testStudentList.filterPreferences("Male", 20, "Computer Science");
+
+        assertEquals(0,
+                testStudentList.filterPreferences("Male", 20,
+                        "Computer Science").length());
+    }
 
     @Test
     public void testGetNextStudentProfile() {
-       testStudentList.addStudentProfile(this.student1);
+        testStudentList.addStudentProfile(this.student1);
 
         assertFalse(testStudentList.isEmpty());
         assertEquals(testStudentList.length(), 1);
