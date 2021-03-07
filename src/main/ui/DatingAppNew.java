@@ -25,22 +25,28 @@ public class DatingAppNew {
 
 
     public void runDatingApp() {
+        boolean keepGoing = true;
         input = new Scanner(System.in);  // Create a Scanner object
         String command;
 
-        System.out.println("What do you want to do?");
-        displayMenu();
-        command = input.next();
+        while (keepGoing) {
+            System.out.println("What do you want to do?");
+            displayMenu();
+            command = input.next();
 
-        if (command.equalsIgnoreCase("a")) {
-            newProfile();
-        } else if (command.equalsIgnoreCase("r")) {
-            deleteProfile();
-        } else if (command.equalsIgnoreCase("f")) {
-            editProfile();
-        } else if (command.equalsIgnoreCase("f")) {
-            System.out.println("Okay ... see you again!");
+            if (command.equalsIgnoreCase("a")) {
+                newProfile();
+            } else if (command.equalsIgnoreCase("r")) {
+                deleteProfile();
+            } else if (command.equalsIgnoreCase("f")) {
+                editProfile();
+            } else if (command.equalsIgnoreCase("q")) {
+                keepGoing = false;
+                System.out.println("Okay ... see you again!");
+            }
+
         }
+
     }
 
 
@@ -89,13 +95,45 @@ public class DatingAppNew {
     }
 
     private void editProfile() {
-        try {
-            student1 = jsonReader.read();
-            System.out.println("Loaded " + student1.getName() + " from " + JSON_STORE);
-        } catch (IOException e) {
-            System.out.println("Unable to read from file: " + JSON_STORE);
-        }
+        loadStudentProfile();
 
+        displayEditingOptions();
+
+        input = new Scanner(System.in);  // Create a Scanner object
+        String command = input.nextLine();
+        String name = null;
+        int age = 0;
+        String gender = null;
+        String major = null;
+        String sp = null;
+        String des = null;
+
+
+        if (command.equals(0)) {
+            student1.setName(name);
+        } else if (command.equals(1)) {
+            Integer.toString(student1.setAge(age));
+        } else if (command.equals(2)) {
+            student1.setGender(gender);
+        } else if (command.equals(3)) {
+            student1.setMajor(major);
+        } else if (command.equals(4)) {
+            student1.setSexualPreference(sp);
+        } else if (command.equals(5)) {
+            student1.setDescription(des);
+        }
+    }
+
+    //EFFECTS: returns options to choose from on the main menu
+    private void displayMenu() {
+        System.out.println("a: Choose me to Add Profile.");
+        System.out.println("r: Choose me to Remove Profile.");
+        System.out.println("f: Choose me to Edit Profile.");
+        System.out.println("q: I want to quit.");
+    }
+
+    //EFFECTS: returns editing options to choose from
+    private void displayEditingOptions() {
         System.out.println("Choose what you want to edit.");
         System.out.println("0: To Edit Name");
         System.out.println("1: To Edit Age");
@@ -103,32 +141,6 @@ public class DatingAppNew {
         System.out.println("3: To Edit Major");
         System.out.println("4: To Edit Sexual Preference");
         System.out.println("5: To Edit Description");
-
-        input = new Scanner(System.in);  // Create a Scanner object
-        String command;
-        command = input.nextLine();
-
-
-        if (command.equals(0)) {
-            student1.setName(command);
-        } else if (command.equals(1)) {
-            Integer.toString(student1.setAge(Integer.parseInt(command)));
-        } else if (command.equals(2)) {
-            student1.setGender(command);
-        } else if (command.equals(3)) {
-            student1.setMajor(command);
-        } else if (command.equals(4)) {
-            student1.setSexualPreference(command);
-        } else if (command.equals(5)) {
-            student1.setDescription(command);
-        }
-    }
-
-    private void displayMenu() {
-        System.out.println("a: Choose me to Add Profile.");
-        System.out.println("r: Choose me to Remove Profile.");
-        System.out.println("f: Choose me to Edit Profile.");
-        System.out.println("q: I want to quit.");
     }
 
     // EFFECTS: saves the studentProfile to file
