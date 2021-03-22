@@ -1,8 +1,9 @@
 package model;
 
 import org.json.JSONObject;
+import persistence.Writable;
 
-public class StudentProfile {
+public class StudentProfile implements Writable {
 
     private String name;
     private String sexualPreference;
@@ -57,56 +58,8 @@ public class StudentProfile {
         return this.sexualPreference;
     }
 
-    //MODIFIES: this
-    //EFFECTS: updates the name of the studentProfile and returns it
-    public String setName(String updateName) {
-        this.name = updateName;
-        return this.name;
-    }
 
-    //MODIFIES: this
-    //EFFECTS: updates the age of the studentProfile and returns it
-    //       : age to be updated must be >= 18
-    //       : sets the age to 0 if age is < 18
-    public int setAge(int updateAge) {
-        if (updateAge >= 18) {           // Below 18, you are a minor. Hence,  you are not eligible
-            this.age = updateAge;        // for the DatingApp.
-        } else {
-            this.age = 0;
-            System.out.println("Age must be above 18");
-        }
-        return this.age;
-    }
-
-
-    //MODIFIES: this
-    //EFFECTS: updates the gender of the studentProfile and returns it
-    public String setGender(String updateGender) {
-        this.gender = updateGender;
-        return this.gender;
-    }
-
-    //MODIFIES: this
-    //EFFECTS: updates the description of the studentProfile and returns it
-    public String setDescription(String updateDescription) {
-        this.description = updateDescription;
-        return this.description;
-    }
-
-    //MODIFIES: this
-    //EFFECTS: updates the major of the studentProfile and returns it
-    public String setMajor(String updateMajor) {
-        this.major = updateMajor;
-        return this.major;
-    }
-
-    //MODIFIES: this
-    //EFFECTS: updates the sexualPreference of the studentProfile and returns it
-    public String setSexualPreference(String updateSexualPreference) {
-        this.sexualPreference = updateSexualPreference;
-        return this.sexualPreference;
-    }
-
+    @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();
         json.put("name", name);

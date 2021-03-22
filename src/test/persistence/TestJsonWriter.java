@@ -1,20 +1,21 @@
 package persistence;
 
+import model.StudentList;
 import model.StudentProfile;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.fail;
 
-public class TestJsonWriter {
+public class TestJsonWriter extends TestJson{
 
     @Test
     void testWriterInvalidFile() {
         try {
-            StudentProfile sp = new StudentProfile("DDP", 19, "Male", "Undecided",
-            "Fluid", "Blah");
+            StudentList list = new StudentList("Dating List");
             JsonWriter writer = new JsonWriter("./data/my\0illegal:fileName.json");
             writer.open();
             fail("IOException was expected");
@@ -26,21 +27,16 @@ public class TestJsonWriter {
     @Test
     void testWriterEmptyStudentProfile() {
         try {
-            StudentProfile sp = new StudentProfile("", 0, "", "",
-                    "", "");
-            JsonWriter writer = new JsonWriter("./data/testWriterEmptyStudentProfile.json");
+            StudentList list = new StudentList("Dating List");
+            JsonWriter writer = new JsonWriter("./data/testWriterEmptyStudentList.json");
             writer.open();
-            writer.write(sp);
+            writer.write(list);
             writer.close();
 
-            JsonReader reader = new JsonReader("./data/testWriterEmptyStudentProfile.json");
-            sp = reader.read();
-            assertEquals("", sp.getName());
-            assertEquals(0, sp.getAge());
-            assertEquals("", sp.getGender());
-            assertEquals("", sp.getMajor());
-            assertEquals("", sp.getSexualPreference());
-            assertEquals("", sp.getDescription());
+            JsonReader reader = new JsonReader("./data/testWriterEmptyStudentList.json");
+            list = reader.read();
+            assertEquals("Dating List", list.getName());
+            assertEquals(0, list.length());
 
         } catch (IOException e) {
             fail("Exception should not have been thrown");
@@ -49,21 +45,25 @@ public class TestJsonWriter {
     @Test
     void testWriterGeneralStudentProfile() {
         try {
-            StudentProfile sp = new StudentProfile("DDP", 19, "Male", "Undecided",
-                    "Fluid", "Blah");
-            JsonWriter writer = new JsonWriter("./data/testWriterGeneralStudentProfile.json");
+            StudentList list = new StudentList("Dating List");
+            list.addStudentProfile(new StudentProfile("DDP", 19, "Male", "Undecided",
+                            "Fluid", "Blah"));
+            list.addStudentProfile(new StudentProfile("Casey", 20, "Female", "CS",
+                            "Fluid", "Blah"));
+            JsonWriter writer = new JsonWriter("./data/testWriterGeneralStudentList.json");
             writer.open();
-            writer.write(sp);
+            writer.write(list);
             writer.close();
 
-            JsonReader reader = new JsonReader("./data/testWriterGeneralStudentProfile.json");
-            sp = reader.read();
-            assertEquals("DDP", sp.getName());
-            assertEquals(19, sp.getAge());
-            assertEquals("Male", sp.getGender());
-            assertEquals("Undecided", sp.getMajor());
-            assertEquals("Fluid", sp.getSexualPreference());
-            assertEquals("Blah", sp.getDescription());
+            JsonReader reader = new JsonReader("./data/testWriterGeneralStudentList.json");
+            list = reader.read();
+            assertEquals("Dating List", list.getName());
+            List<StudentProfile> students = list.getStudentProfiles();
+            assertEquals(2, students.size());
+            checkStudent("DDP", 19, "Male", "Undecided", "Fluid", "Blah",
+                    students.get(0));
+            checkStudent("Casey", 20, "Female", "CS", "Fluid", "Blah",
+                    students.get(1));
 
         } catch (IOException e) {
             fail("Exception should not have been thrown");

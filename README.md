@@ -27,6 +27,6 @@ go out on dates and get to know people in general.
 ## User Stories
 
 - *As a user, I should be able to add new profiles.*
-- *As a user, I should be able to remove profiles.*
+- *As a user, I should be able to print existing profiles.*
 - *As a user, I should be able to save my work to a file.*
 - *As a user, I should be able to load my work from a file.*

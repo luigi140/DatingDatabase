@@ -13,7 +13,7 @@ public class TestStudentList {
 
     @BeforeEach
     public void setup() {
-        this.testStudentList = new StudentList();
+        this.testStudentList = new StudentList("Kabir");
         this.student1 = new StudentProfile("Kabir", 18, "Male",
                 "Psychology", "Female",
                 "I am from India and I hope to be a Clinical Psychologist");

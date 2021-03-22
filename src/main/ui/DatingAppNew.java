@@ -1,12 +1,14 @@
 package ui;
 
 
+import model.StudentList;
 import model.StudentProfile;
 import persistence.JsonReader;
 import persistence.JsonWriter;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.List;
 import java.util.Scanner;
 
 public class DatingAppNew {
@@ -14,10 +16,11 @@ public class DatingAppNew {
     private final JsonWriter jsonWriter;
     private final JsonReader jsonReader;
 
-    private StudentProfile student1;
+    private StudentList list;
     private Scanner input;
 
     public DatingAppNew() {
+        list = new StudentList("Dating List");
         jsonWriter = new JsonWriter(JSON_STORE);
         jsonReader = new JsonReader(JSON_STORE);
         runDatingApp();
@@ -26,7 +29,7 @@ public class DatingAppNew {
 
     public void runDatingApp() {
         boolean keepGoing = true;
-        input = new Scanner(System.in);  // Create a Scanner object
+        input = new Scanner(System.in);
         String command;
 
         while (keepGoing) {
@@ -37,9 +40,11 @@ public class DatingAppNew {
             if (command.equalsIgnoreCase("a")) {
                 newProfile();
             } else if (command.equalsIgnoreCase("r")) {
-                deleteProfile();
-            } else if (command.equalsIgnoreCase("f")) {
-                editProfile();
+                printStudentProfiles();
+            } else if (command.equalsIgnoreCase("s")) {
+                saveStudentProfile();
+            } else if (command.equalsIgnoreCase("l")) {
+                loadStudentProfile();
             } else if (command.equalsIgnoreCase("q")) {
                 keepGoing = false;
                 System.out.println("Okay ... see you again!");
@@ -49,20 +54,7 @@ public class DatingAppNew {
 
     }
 
-
-    private void deleteProfile() {
-        StudentProfile emptyProfile = new StudentProfile("", 0, "", "", "",
-                "");
-        try {
-            jsonWriter.open();
-            jsonWriter.write(emptyProfile);
-            jsonWriter.close();
-        } catch (FileNotFoundException e) {
-            System.out.println("Unable to write to file: " + JSON_STORE);
-        }
-
-    }
-
+    //EFFECTS: adds a profile to the studentList and return's it
     private void newProfile() {
 
         System.out.println("What's your name?");
@@ -83,73 +75,36 @@ public class DatingAppNew {
         System.out.println("Use this space to describe yourself.");
         String des = input.next();
 
-        StudentProfile profile = new StudentProfile(name, age, gender, major, sexualPreference, des);
-        try {
-            jsonWriter.open();
-            jsonWriter.write(profile);
-            jsonWriter.close();
-            System.out.println("Saved " + profile.getName() + " to " + JSON_STORE);
-        } catch (FileNotFoundException e) {
-            System.out.println("Unable to write to file: " + JSON_STORE);
-        }
+        list.addStudentProfile(new StudentProfile(name, age, gender, major, sexualPreference, des));
+
     }
 
-    private void editProfile() {
-        loadStudentProfile();
+    // EFFECTS: prints all the studentProfile's in the list to the console
+    private void printStudentProfiles() {
+        List<StudentProfile> students = list.getStudentProfiles();
 
-        displayEditingOptions();
-
-        input = new Scanner(System.in);  // Create a Scanner object
-        String command = input.nextLine();
-        String name = null;
-        int age = 0;
-        String gender = null;
-        String major = null;
-        String sp = null;
-        String des = null;
-
-
-        if (command.equals(0)) {
-            student1.setName(name);
-        } else if (command.equals(1)) {
-            Integer.toString(student1.setAge(age));
-        } else if (command.equals(2)) {
-            student1.setGender(gender);
-        } else if (command.equals(3)) {
-            student1.setMajor(major);
-        } else if (command.equals(4)) {
-            student1.setSexualPreference(sp);
-        } else if (command.equals(5)) {
-            student1.setDescription(des);
+        for (StudentProfile t : students) {
+            System.out.println(t);
         }
     }
 
     //EFFECTS: returns options to choose from on the main menu
     private void displayMenu() {
         System.out.println("a: Choose me to Add Profile.");
-        System.out.println("r: Choose me to Remove Profile.");
-        System.out.println("f: Choose me to Edit Profile.");
+        System.out.println("r: Choose me to Print Profiles.");
+        System.out.println("s: Choose me to Save Profiles.");
+        System.out.println("l: Choose me to Load Profiles.");
         System.out.println("q: I want to quit.");
     }
 
-    //EFFECTS: returns editing options to choose from
-    private void displayEditingOptions() {
-        System.out.println("Choose what you want to edit.");
-        System.out.println("0: To Edit Name");
-        System.out.println("1: To Edit Age");
-        System.out.println("2: To Edit Gender");
-        System.out.println("3: To Edit Major");
-        System.out.println("4: To Edit Sexual Preference");
-        System.out.println("5: To Edit Description");
-    }
 
     // EFFECTS: saves the studentProfile to file
     private void saveStudentProfile() {
         try {
             jsonWriter.open();
-            jsonWriter.write(student1);
+            jsonWriter.write(list);
             jsonWriter.close();
-            System.out.println("Saved " + student1.getName() + " to " + JSON_STORE);
+            System.out.println("Saved " + list.getName() + " to " + JSON_STORE);
         } catch (FileNotFoundException e) {
             System.out.println("Unable to write to file: " + JSON_STORE);
         }
@@ -159,8 +114,8 @@ public class DatingAppNew {
     // EFFECTS: loads studentProfile from file
     private void loadStudentProfile() {
         try {
-            student1 = jsonReader.read();
-            System.out.println("Loaded " + student1.getName() + " from " + JSON_STORE);
+            list = jsonReader.read();
+            System.out.println("Loaded " + list.getName() + " from " + JSON_STORE);
         } catch (IOException e) {
             System.out.println("Unable to read from file: " + JSON_STORE);
         }

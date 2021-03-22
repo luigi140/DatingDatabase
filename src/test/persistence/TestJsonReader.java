@@ -1,19 +1,21 @@
 package persistence;
 
+import model.StudentList;
 import model.StudentProfile;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class TestJsonReader {
+public class TestJsonReader extends TestJson{
 
     @Test
     void testReaderNonExistentFile() {
         JsonReader reader = new JsonReader("./data/noSuchFile.json");
         try {
-            StudentProfile sp = reader.read();
+            StudentList sp = reader.read();
             fail("IOException expected");
         } catch (IOException e) {
             // pass
@@ -22,15 +24,12 @@ public class TestJsonReader {
 
     @Test
     void testReaderEmptyStudentProfile() {
-        JsonReader reader = new JsonReader("./data/testReaderEmptyStudentProfile.json");
+        JsonReader reader = new JsonReader("./data/testReaderEmptyStudentList.json");
         try {
-            StudentProfile sp = reader.read();
-            assertEquals("", sp.getName());
-            assertEquals(0, sp.getAge());
-            assertEquals("", sp.getGender());
-            assertEquals("", sp.getMajor());
-            assertEquals("", sp.getSexualPreference());
-            assertEquals("", sp.getDescription());
+            StudentList sp = reader.read();
+            assertEquals("Dating List", sp.getName());
+            assertEquals(0, sp.length());
+
         } catch (IOException e) {
             fail("Couldn't read from file");
         }
@@ -38,15 +37,17 @@ public class TestJsonReader {
 
     @Test
     void testReaderGeneralWorkRoom() {
-        JsonReader reader = new JsonReader("./data/testReaderGeneralStudentProfile.json");
+        JsonReader reader = new JsonReader("./data/testReaderGeneralStudentList.json");
         try {
-            StudentProfile sp = reader.read();
-            assertEquals("DDP", sp.getName());
-            assertEquals(19, sp.getAge());
-            assertEquals("Male", sp.getGender());
-            assertEquals("Undecided", sp.getMajor());
-            assertEquals("Fluid", sp.getSexualPreference());
-            assertEquals("Blah", sp.getDescription());
+            StudentList sp = reader.read();
+            assertEquals("Dating List", sp.getName());
+            List<StudentProfile> students = sp.getStudentProfiles();
+            assertEquals(2, students.size());
+            checkStudent("DDP", 19, "Male", "Undecided", "Fluid", "Blah",
+                    students.get(0));
+            checkStudent("Casey", 20, "Female", "CS", "Fluid", "Blah",
+                    students.get(1));
+
         } catch (IOException e) {
             fail("Couldn't read from file");
         }

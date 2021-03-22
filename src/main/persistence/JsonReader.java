@@ -1,6 +1,8 @@
 package persistence;
 
+import model.StudentList;
 import model.StudentProfile;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.IOException;
@@ -20,10 +22,10 @@ public class JsonReader {
 
     // EFFECTS: reads workroom from file and returns it;
     // throws IOException if an error occurs reading data from file
-    public StudentProfile read() throws IOException {
+    public StudentList read() throws IOException {
         String jsonData = readFile(source);
         JSONObject jsonObject = new JSONObject(jsonData);
-        return parseStudentProfile(jsonObject);
+        return parseStudentList(jsonObject);
     }
 
     // EFFECTS: reads source file as string and returns it
@@ -38,17 +40,34 @@ public class JsonReader {
     }
 
     // EFFECTS: parses workroom from JSON object and returns it
-    private StudentProfile parseStudentProfile(JSONObject jsonObject) {
+    private StudentList parseStudentList(JSONObject jsonObject) {
+        String name = jsonObject.getString("name");
+        StudentList list = new StudentList(name);
+        addStudents(list, jsonObject);
+        return list;
+    }
+
+    // MODIFIES: list
+    // EFFECTS: parses students from JSON object and adds them to student list
+    private void addStudents(StudentList list, JSONObject jsonObject) {
+        JSONArray jsonArray = jsonObject.getJSONArray("students");
+        for (Object json : jsonArray) {
+            JSONObject nextThingy = (JSONObject) json;
+            addStudent(list, nextThingy);
+        }
+    }
+
+    // MODIFIES: list
+    // EFFECTS: parses student profile from JSON object and adds it to workroom
+    private void addStudent(StudentList list, JSONObject jsonObject) {
         String name = jsonObject.getString("name");
         int age = jsonObject.getInt("age");
         String gender = jsonObject.getString("gender");
         String major = jsonObject.getString("major");
-        String sp = jsonObject.getString("sexualPreference");
+        String spp = jsonObject.getString("sexualPreference");
         String des = jsonObject.getString("description");
 
-
-        StudentProfile wr = new StudentProfile(name, age, gender, major, sp, des);
-        return wr;
+        StudentProfile sp = new StudentProfile(name, age, gender, major, spp, des);
+        list.addStudentProfile(sp);
     }
-
 }

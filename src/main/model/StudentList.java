@@ -1,16 +1,32 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writable;
+
+import java.util.Collections;
 import java.util.LinkedList;
+import java.util.List;
 
-public class StudentList {
+public class StudentList implements Writable {
 
+    private String name;
     private final LinkedList<StudentProfile> studentList;
 
     // EFFECTS: Constructs a StudentList
-    public StudentList() {
+    public StudentList(String name) {
+        this.name = name;
         studentList = new LinkedList<>();
     }
 
+    public String getName() {
+        return this.name;
+    }
+
+    // EFFECTS: returns an unmodifiable list of student profiles in this student List
+    public List<StudentProfile> getStudentProfiles() {
+        return Collections.unmodifiableList(studentList);
+    }
 
     // MODIFIES: this
     // EFFECTS:  adds a StudentProfile and returns true
@@ -27,7 +43,7 @@ public class StudentList {
 
     //EFFECTS: returns a new list of studentProfiles with user preferences
     public StudentList filterPreferences(String gender, int age, String major) {
-        StudentList filteredList = new StudentList();
+        StudentList filteredList = new StudentList("Filtered List");
 
         for (StudentProfile i : studentList) {
             if ((i.getGender() == gender && i.getAge() == age && i.getMajor() == major)
@@ -58,4 +74,21 @@ public class StudentList {
         return studentList.size() == 0;
     }
 
+    @Override
+    public JSONObject toJson() {
+        JSONObject json = new JSONObject();
+        json.put("name", name);
+        json.put("students", studentsToJson());
+        return json;
+    }
+
+    // EFFECTS: returns students in this studentList as a JSON array
+    private JSONArray studentsToJson() {
+        JSONArray jsonArray = new JSONArray();
+
+        for (StudentProfile s : studentList) {
+            jsonArray.put(s.toJson());
+        }
+        return jsonArray;
+    }
 }

@@ -1,6 +1,6 @@
 package persistence;
 
-import model.StudentProfile;
+import model.StudentList;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -27,7 +27,7 @@ public class JsonWriter {
 
     // MODIFIES: this
     // EFFECTS: writes JSON representation of workroom to file
-    public void write(StudentProfile wr) {
+    public void write(StudentList wr) {
         JSONObject json = wr.toJson();
         saveToFile(json.toString(TAB));
     }

@@ -1,8 +1,21 @@
 {
-    "gender": "",
-    "major": "",
-    "name": "",
-    "description": "",
-    "sexualPreference": "",
-    "age": 0
+    "name": "Dating List",
+    "students": [
+        {
+            "gender": "kejvne",
+            "major": "eerger",
+            "name": "DDP",
+            "description": "erger",
+            "sexualPreference": "gerger",
+            "age": 20
+        },
+        {
+            "gender": "ferfergv",
+            "major": "vgerverb",
+            "name": "efve",
+            "description": "erberbe",
+            "sexualPreference": "berbverb",
+            "age": 21
+        }
+    ]
 }
