@@ -4,11 +4,12 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import persistence.Writable;
 
+import javax.swing.*;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
-public class StudentList implements Writable {
+public class StudentList extends DefaultListCellRenderer implements Writable {
 
     private String name;
     private final LinkedList<StudentProfile> studentList;
