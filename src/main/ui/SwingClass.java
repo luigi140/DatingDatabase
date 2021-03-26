@@ -1,7 +1,10 @@
 package ui;
 
 
+import model.StudentList;
 import model.StudentProfile;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
@@ -11,32 +14,53 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 
 public class SwingClass extends JPanel implements ListSelectionListener {
-    private JList list;
-    private DefaultListModel studentList;
+
+    private static final String JSON_STORE = "./data/profiles.json";
+    private final JsonWriter jsonWriter;
+    private final JsonReader jsonReader;
 
     private static final String okayString = "Add";
     private static final String removeString = "Remove";
 
+    private JList list;
+    private JFrame frame;
     private JButton removeButton;
     private JButton addButton;
     private JTextField studentProfile;
+    private DefaultListModel studentList;
+    private StudentList studentList2 = new StudentList("List");
+
 
     public SwingClass() {
         super(new BorderLayout());
 
+        jsonWriter = new JsonWriter(JSON_STORE);
+        jsonReader = new JsonReader(JSON_STORE);
+
+        frame = new JFrame();
+        frame.setBounds(0, 0, 500, 500);
         studentList = new DefaultListModel();
-        studentList.addElement(new StudentProfile("DDP", 19, "Male", "Undecided",
-                "Fluid", "Blah"));
-        studentList.addElement(new StudentProfile("Casey", 20, "Female", "CS",
-                "Fluid", "Blah"));
 
+        loadStudentProfile();
+        refreshStudentList();
         listScrollPane();
-
         createPanelWithBoxLayout();
 
+        frame.add(this);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setVisible(true);
+    }
+
+    public void refreshStudentList() {
+        for (StudentProfile s : studentList2.getStudentProfiles()) {
+            studentList.addElement(s.getName() + " " + s.getAge() + " " + s.getGender() + " " + s.getMajor()
+                    + " " + s.getSexualPreference() + " " + s.getDescription());
+        }
     }
 
     //Create the list and put it in a scroll pane.
@@ -60,8 +84,8 @@ public class SwingClass extends JPanel implements ListSelectionListener {
         studentProfile = new JTextField(10);
         studentProfile.addActionListener(okayListener);
         studentProfile.getDocument().addDocumentListener(okayListener);
-        String name = studentList.getElementAt(
-                list.getSelectedIndex()).toString();
+        //String name = studentList.getElementAt(
+        //        list.getSelectedIndex()).toString();
     }
 
     //Create a panel that uses BoxLayout.
@@ -80,6 +104,29 @@ public class SwingClass extends JPanel implements ListSelectionListener {
 
         add(listScrollPane, BorderLayout.CENTER);
         add(buttonPane, BorderLayout.PAGE_END);
+    }
+
+    // EFFECTS: saves the studentProfile to file
+    private void saveStudentProfile() {
+        try {
+            jsonWriter.open();
+            jsonWriter.write(studentList2);
+            jsonWriter.close();
+            System.out.println("Saved " + studentList2.getName() + " to " + JSON_STORE);
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write to file: " + JSON_STORE);
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: loads studentProfile from file
+    private void loadStudentProfile() {
+        try {
+            studentList2 = jsonReader.read();
+            System.out.println("Loaded " + studentList2.getName() + " from " + JSON_STORE);
+        } catch (IOException e) {
+            System.out.println("Unable to read from file: " + JSON_STORE);
+        }
     }
 
     class RemoveListener implements ActionListener {
@@ -191,7 +238,7 @@ public class SwingClass extends JPanel implements ListSelectionListener {
 
     //This method is required by ListSelectionListener.
     public void valueChanged(ListSelectionEvent e) {
-        if (e.getValueIsAdjusting() == false) {
+        if (!e.getValueIsAdjusting()) {
 
             if (list.getSelectedIndex() == -1) {
                 //No selection, disable fire button.
@@ -203,21 +250,4 @@ public class SwingClass extends JPanel implements ListSelectionListener {
             }
         }
     }
-
-
-    public static void createAndShowGUI() {
-        //Create and set up the window.
-        JFrame frame = new JFrame("Dating App Ui");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        //Create and set up the content pane.
-        JComponent newContentPane = new SwingClass();
-        newContentPane.setOpaque(true); //content panes must be opaque
-        frame.setContentPane(newContentPane);
-
-        //Display the window.
-        frame.pack();
-        frame.setVisible(true);
-    }
-
 }

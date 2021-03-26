@@ -55,6 +55,17 @@ public class StudentList extends DefaultListCellRenderer implements Writable {
         return filteredList;
     }
 
+    //EFFECTS: returns a studentProfile with matching names
+    public StudentProfile getStudentWithName(String name) {
+
+        for (StudentProfile i : studentList) {
+            if (i.getName().equals(name)) {
+                return i;
+            }
+        }
+        return null;
+    }
+
 
     // REQUIRES: the list should not be empty
     // MODIFIES: this
