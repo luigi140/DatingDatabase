@@ -11,32 +11,15 @@ class TestStudentProfile {
 
     @BeforeEach
     void runBefore() {
-        testStudentProfile = new StudentProfile("Kabir", 18, "Male", "Psychology",
-                "Female", "I am from India and I hope to be a Clinical Psychologist");
+        testStudentProfile = new StudentProfile("Kabir",  "I am from India and I hope to be a Clinical Psychologist");
     }
 
     @Test
     void testConstructor() {
         assertEquals("Kabir", testStudentProfile.getName());
-        assertEquals(18, testStudentProfile.getAge());
-        assertEquals("Male", testStudentProfile.getGender());
-        assertEquals("Psychology", testStudentProfile.getMajor());
-        assertEquals("Female", testStudentProfile.getSexualPreference());
         assertEquals("I am from India and I hope to be a Clinical Psychologist",
                 testStudentProfile.getDescription());
     }
 
-    @Test
-    void testConstructorBelowAge() {
-        testStudentProfile = new StudentProfile("Kabir", 15, "Male", "Psychology",
-                "Female", "I am from India and I hope to be a Clinical Psychologist");
-        assertEquals("Kabir", testStudentProfile.getName());
-        assertEquals(0, testStudentProfile.getAge());
-        assertEquals("Male", testStudentProfile.getGender());
-        assertEquals("Psychology", testStudentProfile.getMajor());
-        assertEquals("Female", testStudentProfile.getSexualPreference());
-        assertEquals("I am from India and I hope to be a Clinical Psychologist",
-                testStudentProfile.getDescription());
-    }
 
 }

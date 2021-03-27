@@ -42,19 +42,6 @@ public class StudentList extends DefaultListCellRenderer implements Writable {
     }
 
 
-    //EFFECTS: returns a new list of studentProfiles with user preferences
-    public StudentList filterPreferences(String gender, int age, String major) {
-        StudentList filteredList = new StudentList("Filtered List");
-
-        for (StudentProfile i : studentList) {
-            if ((i.getGender() == gender && i.getAge() == age && i.getMajor() == major)
-                    || i.getGender() == gender || i.getAge() == age || i.getMajor() == major) {
-                filteredList.addStudentProfile(i);
-            }
-        }
-        return filteredList;
-    }
-
     //EFFECTS: returns a studentProfile with matching names
     public StudentProfile getStudentWithName(String name) {
 

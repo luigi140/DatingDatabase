@@ -60,22 +60,10 @@ public class DatingAppNew {
         System.out.println("What's your name?");
         String name = input.next();
 
-        System.out.println("What's your age?");
-        int age = Integer.parseInt(input.next());
-
-        System.out.println("Please input your gender.");
-        String gender = input.next();
-
-        System.out.println("What's your major?");
-        String major = input.next();
-
-        System.out.println("What's your sexual preference?");
-        String sexualPreference = input.next();
-
         System.out.println("Use this space to describe yourself.");
         String des = input.next();
 
-        list.addStudentProfile(new StudentProfile(name, age, gender, major, sexualPreference, des));
+        list.addStudentProfile(new StudentProfile(name, des));
 
     }
 

@@ -43,10 +43,8 @@ public class TestJsonReader extends TestJson{
             assertEquals("Dating List", sp.getName());
             List<StudentProfile> students = sp.getStudentProfiles();
             assertEquals(2, students.size());
-            checkStudent("DDP", 19, "Male", "Undecided", "Fluid", "Blah",
-                    students.get(0));
-            checkStudent("Casey", 20, "Female", "CS", "Fluid", "Blah",
-                    students.get(1));
+            checkStudent("DDP", "Blah", students.get(0));
+            checkStudent("Casey", "Blah", students.get(1));
 
         } catch (IOException e) {
             fail("Couldn't read from file");

@@ -46,10 +46,8 @@ public class TestJsonWriter extends TestJson{
     void testWriterGeneralStudentProfile() {
         try {
             StudentList list = new StudentList("Dating List");
-            list.addStudentProfile(new StudentProfile("DDP", 19, "Male", "Undecided",
-                            "Fluid", "Blah"));
-            list.addStudentProfile(new StudentProfile("Casey", 20, "Female", "CS",
-                            "Fluid", "Blah"));
+            list.addStudentProfile(new StudentProfile("DDP", "Blah"));
+            list.addStudentProfile(new StudentProfile("Casey", "Blah"));
             JsonWriter writer = new JsonWriter("./data/testWriterGeneralStudentList.json");
             writer.open();
             writer.write(list);
@@ -60,10 +58,8 @@ public class TestJsonWriter extends TestJson{
             assertEquals("Dating List", list.getName());
             List<StudentProfile> students = list.getStudentProfiles();
             assertEquals(2, students.size());
-            checkStudent("DDP", 19, "Male", "Undecided", "Fluid", "Blah",
-                    students.get(0));
-            checkStudent("Casey", 20, "Female", "CS", "Fluid", "Blah",
-                    students.get(1));
+            checkStudent("DDP", "Blah", students.get(0));
+            checkStudent("Casey", "Blah", students.get(1));
 
         } catch (IOException e) {
             fail("Exception should not have been thrown");

@@ -24,14 +24,17 @@ public class SwingClass extends JPanel implements ListSelectionListener {
     private final JsonWriter jsonWriter;
     private final JsonReader jsonReader;
 
-    private static final String okayString = "Add";
-    private static final String removeString = "Remove";
+    private static final String addString = "Add";
+    private static final String saveString = "Save";
+    private static final String loadString = "Load";
 
     private JList list;
     private JFrame frame;
-    private JButton removeButton;
+    private JButton saveButton;
+    private JButton loadButton;
     private JButton addButton;
-    private JTextField studentProfile;
+    private JTextField studentName;
+    private JTextField description;
     private DefaultListModel studentList;
     private StudentList studentList2 = new StudentList("List");
 
@@ -46,7 +49,6 @@ public class SwingClass extends JPanel implements ListSelectionListener {
         frame.setBounds(0, 0, 500, 500);
         studentList = new DefaultListModel();
 
-        loadStudentProfile();
         refreshStudentList();
         listScrollPane();
         createPanelWithBoxLayout();
@@ -58,8 +60,7 @@ public class SwingClass extends JPanel implements ListSelectionListener {
 
     public void refreshStudentList() {
         for (StudentProfile s : studentList2.getStudentProfiles()) {
-            studentList.addElement(s.getName() + " " + s.getAge() + " " + s.getGender() + " " + s.getMajor()
-                    + " " + s.getSexualPreference() + " " + s.getDescription());
+            studentList.addElement(s.getName() + " " + s.getDescription());
         }
     }
 
@@ -71,21 +72,28 @@ public class SwingClass extends JPanel implements ListSelectionListener {
         list.addListSelectionListener(this);
         list.setVisibleRowCount(5);
 
-        addButton = new JButton(okayString);
-        OkayListener okayListener = new OkayListener(addButton);
-        addButton.setActionCommand(okayString);
-        addButton.addActionListener(okayListener);
+        addButton = new JButton(addString);
+        AddListener addListener = new AddListener(addButton);
+        addButton.setActionCommand(addString);
+        addButton.addActionListener(addListener);
         addButton.setEnabled(false);
 
-        removeButton = new JButton(removeString);
-        removeButton.setActionCommand(removeString);
-        removeButton.addActionListener(new RemoveListener());
+        saveButton = new JButton(saveString);
+        saveButton.setActionCommand(saveString);
+        saveButton.addActionListener(new SaveListener());
 
-        studentProfile = new JTextField(10);
-        studentProfile.addActionListener(okayListener);
-        studentProfile.getDocument().addDocumentListener(okayListener);
-        //String name = studentList.getElementAt(
-        //        list.getSelectedIndex()).toString();
+        loadButton = new JButton(loadString);
+        loadButton.setActionCommand(loadString);
+        loadButton.addActionListener(new LoadListener());
+
+        studentName = new JTextField(10);
+        studentName.addActionListener(addListener);
+        studentName.getDocument().addDocumentListener(addListener);
+
+        description = new JTextField(10);
+        description.addActionListener(addListener);
+        description.getDocument().addDocumentListener(addListener);
+
     }
 
     //Create a panel that uses BoxLayout.
@@ -94,11 +102,13 @@ public class SwingClass extends JPanel implements ListSelectionListener {
         JPanel buttonPane = new JPanel();
         buttonPane.setLayout(new BoxLayout(buttonPane,
                 BoxLayout.LINE_AXIS));
-        buttonPane.add(removeButton);
+        buttonPane.add(loadButton);
+        buttonPane.add(saveButton);
         buttonPane.add(Box.createHorizontalStrut(5));
         buttonPane.add(new JSeparator(SwingConstants.VERTICAL));
         buttonPane.add(Box.createHorizontalStrut(5));
-        buttonPane.add(studentProfile);
+        buttonPane.add(studentName);
+        buttonPane.add(description);
         buttonPane.add(addButton);
         buttonPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
@@ -106,7 +116,7 @@ public class SwingClass extends JPanel implements ListSelectionListener {
         add(buttonPane, BorderLayout.PAGE_END);
     }
 
-    // EFFECTS: saves the studentProfile to file
+    // EFFECTS: saves the studentName to file
     private void saveStudentProfile() {
         try {
             jsonWriter.open();
@@ -119,7 +129,7 @@ public class SwingClass extends JPanel implements ListSelectionListener {
     }
 
     // MODIFIES: this
-    // EFFECTS: loads studentProfile from file
+    // EFFECTS: loads studentName from file
     private void loadStudentProfile() {
         try {
             studentList2 = jsonReader.read();
@@ -129,78 +139,70 @@ public class SwingClass extends JPanel implements ListSelectionListener {
         }
     }
 
-    class RemoveListener implements ActionListener {
+    class SaveListener implements ActionListener {
         public void actionPerformed(ActionEvent e) {
-            //This method can be called only if
-            //there's a valid selection
-            //so go ahead and remove whatever is selected.
-            int index = list.getSelectedIndex();
-            studentList.remove(index);
+
+            saveStudentProfile();
 
             int size = studentList.getSize();
 
             if (size == 0) { //Nobody's left, disable firing.
-                removeButton.setEnabled(false);
+                saveButton.setEnabled(false);
+            } else {
+                saveButton.setEnabled(true);
+            }
+        }
+    }
+
+    class LoadListener implements ActionListener {
+        public void actionPerformed(ActionEvent e) {
+
+            loadStudentProfile();
+            refreshStudentList();
+
+            int size = studentList.getSize();
+
+            if (size == 0) {
+                loadButton.setEnabled(true);
 
             } else { //Select an index.
-                if (index == studentList.getSize()) {
-                    //removed item in last position
-                    index--;
-                }
-
-                list.setSelectedIndex(index);
-                list.ensureIndexIsVisible(index);
+                loadButton.setEnabled(false);
             }
         }
     }
 
     //This listener is shared by the text field and the hire button.
-    class OkayListener implements ActionListener, DocumentListener {
+    class AddListener implements ActionListener, DocumentListener {
         private boolean alreadyEnabled = false;
         private final JButton button;
 
-        public OkayListener(JButton button) {
+        public AddListener(JButton button) {
             this.button = button;
         }
 
         //Required by ActionListener.
         public void actionPerformed(ActionEvent e) {
-            String name = studentProfile.getText();
+            String name = studentName.getText();
+            String des = description.getText();
+
+            studentList2.addStudentProfile(new StudentProfile(name, des));
 
             //User didn't type in a unique name...
-            if (name.equals("") || alreadyInList(name)) {
+            if (name.equals("")) {
                 Toolkit.getDefaultToolkit().beep();
-                studentProfile.requestFocusInWindow();
-                studentProfile.selectAll();
+                studentName.requestFocusInWindow();
+                studentName.selectAll();
                 return;
             }
 
-            int index = list.getSelectedIndex(); //get selected index
-            if (index == -1) { //no selection, so insert at beginning
-                index = 0;
-            } else {           //add after the selected item
-                index++;
-            }
+            studentList.addElement(studentName.getText() + " " + description.getText());
 
-            studentList.insertElementAt(studentProfile.getText(), index);
-            //If we just wanted to add to the end, we'd do this:
-            //listModel.addElement(employeeName.getText());
+            studentName.requestFocusInWindow();
+            studentName.setText("");
 
-            //Reset the text field.
-            studentProfile.requestFocusInWindow();
-            studentProfile.setText("");
+            description.requestFocusInWindow();
+            description.setText("");
 
-            //Select the new item and make it visible.
-            list.setSelectedIndex(index);
-            list.ensureIndexIsVisible(index);
-        }
-
-
-        //This method tests for string equality. You could certainly
-        //get more sophisticated about the algorithm.  For example,
-        //you might want to ignore white space and capitalization.
-        protected boolean alreadyInList(String name) {
-            return studentList.contains(name);
         }
 
         //Required by DocumentListener.
@@ -241,12 +243,12 @@ public class SwingClass extends JPanel implements ListSelectionListener {
         if (!e.getValueIsAdjusting()) {
 
             if (list.getSelectedIndex() == -1) {
-                //No selection, disable fire button.
-                removeButton.setEnabled(false);
+                //No selection
+                saveButton.setEnabled(false);
 
             } else {
-                //Selection, enable the fire button.
-                removeButton.setEnabled(true);
+                //Selection
+                saveButton.setEnabled(true);
             }
         }
     }

@@ -61,13 +61,9 @@ public class JsonReader {
     // EFFECTS: parses student profile from JSON object and adds it to workroom
     private void addStudent(StudentList list, JSONObject jsonObject) {
         String name = jsonObject.getString("name");
-        int age = jsonObject.getInt("age");
-        String gender = jsonObject.getString("gender");
-        String major = jsonObject.getString("major");
-        String spp = jsonObject.getString("sexualPreference");
         String des = jsonObject.getString("description");
 
-        StudentProfile sp = new StudentProfile(name, age, gender, major, spp, des);
+        StudentProfile sp = new StudentProfile(name,  des);
         list.addStudentProfile(sp);
     }
 }

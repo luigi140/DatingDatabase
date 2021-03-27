@@ -2,20 +2,12 @@
     "name": "Dating List",
     "students": [
         {
-            "gender": "Male",
-            "major": "Undecided",
             "name": "DDP",
-            "description": "Blah",
-            "sexualPreference": "Fluid",
-            "age": 19
+            "description": "Blah"
         },
         {
-            "gender": "Female",
-            "major": "CS",
             "name": "Casey",
-            "description": "Blah",
-            "sexualPreference": "Fluid",
-            "age": 20
+            "description": "Blah"
         }
     ]
 }
