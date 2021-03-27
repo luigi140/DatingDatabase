@@ -42,18 +42,6 @@ public class StudentList extends DefaultListCellRenderer implements Writable {
     }
 
 
-    //EFFECTS: returns a studentProfile with matching names
-    public StudentProfile getStudentWithName(String name) {
-
-        for (StudentProfile i : studentList) {
-            if (i.getName().equals(name)) {
-                return i;
-            }
-        }
-        return null;
-    }
-
-
     // REQUIRES: the list should not be empty
     // MODIFIES: this
     // EFFECTS:  returns a list with the first studentProfile removed
@@ -73,6 +61,7 @@ public class StudentList extends DefaultListCellRenderer implements Writable {
         return studentList.size() == 0;
     }
 
+    // EFFECTS: creates a json object for student list
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();

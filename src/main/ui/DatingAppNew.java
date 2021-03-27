@@ -19,6 +19,7 @@ public class DatingAppNew {
     private StudentList list;
     private Scanner input;
 
+    // EFFECTS: creates a constructor
     public DatingAppNew() {
         list = new StudentList("Dating List");
         jsonWriter = new JsonWriter(JSON_STORE);
@@ -27,6 +28,8 @@ public class DatingAppNew {
     }
 
 
+    // MODIFIES: this
+    // EFFECTS: takes in an input and processes the desired functionality
     public void runDatingApp() {
         boolean keepGoing = true;
         input = new Scanner(System.in);

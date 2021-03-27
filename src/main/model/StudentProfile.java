@@ -26,6 +26,7 @@ public class StudentProfile implements Writable {
     }
 
 
+    // EFFECTS: Creates a json object of student profile
     @Override
     public JSONObject toJson() {
         JSONObject json = new JSONObject();

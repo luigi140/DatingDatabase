@@ -6,19 +6,21 @@ import model.StudentProfile;
 import persistence.JsonReader;
 import persistence.JsonWriter;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
 
-public class SwingClass extends JPanel implements ListSelectionListener {
+public class SwingClass extends JPanel {
 
     private static final String JSON_STORE = "./data/profiles.json";
     private final JsonWriter jsonWriter;
@@ -30,15 +32,18 @@ public class SwingClass extends JPanel implements ListSelectionListener {
 
     private JList list;
     private JFrame frame;
+    private final JLabel label1 = new JLabel("Name: ");
+    private final JLabel label2 = new JLabel(" Description: ");
     private JButton saveButton;
     private JButton loadButton;
     private JButton addButton;
     private JTextField studentName;
     private JTextField description;
-    private DefaultListModel studentList;
-    private StudentList studentList2 = new StudentList("List");
+    private final DefaultListModel studentList = new DefaultListModel();
+    private StudentList studentList2 = new StudentList("Dating List");
 
 
+    // EFFECTS: Creates a constructor
     public SwingClass() {
         super(new BorderLayout());
 
@@ -46,8 +51,7 @@ public class SwingClass extends JPanel implements ListSelectionListener {
         jsonReader = new JsonReader(JSON_STORE);
 
         frame = new JFrame();
-        frame.setBounds(0, 0, 500, 500);
-        studentList = new DefaultListModel();
+        frame.setBounds(0, 0, 700, 700);
 
         refreshStudentList();
         listScrollPane();
@@ -58,33 +62,37 @@ public class SwingClass extends JPanel implements ListSelectionListener {
         frame.setVisible(true);
     }
 
+    // REQUIRES: a java list of student profiles
+    // MODIFIES: this
+    // EFFECTS:  returns a Default List model of student profiles for JList to process
     public void refreshStudentList() {
         for (StudentProfile s : studentList2.getStudentProfiles()) {
-            studentList.addElement(s.getName() + " " + s.getDescription());
+            studentList.addElement(s.getName() + " : " + s.getDescription());
         }
     }
 
-    //Create the list and put it in a scroll pane.
+    //EFFECTS: Creates the list and puts it in a scroll pane.
     public void listScrollPane() {
-        list = new JList(studentList);
-        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        list.setSelectedIndex(0);
-        list.addListSelectionListener(this);
-        list.setVisibleRowCount(5);
+        newJlist();
 
         addButton = new JButton(addString);
         AddListener addListener = new AddListener(addButton);
+        AudioListener audioListener = new AudioListener();
         addButton.setActionCommand(addString);
         addButton.addActionListener(addListener);
+        addButton.addActionListener(audioListener);
         addButton.setEnabled(false);
 
         saveButton = new JButton(saveString);
         saveButton.setActionCommand(saveString);
         saveButton.addActionListener(new SaveListener());
+        saveButton.addActionListener(audioListener);
+        saveButton.setEnabled(false);
 
         loadButton = new JButton(loadString);
         loadButton.setActionCommand(loadString);
         loadButton.addActionListener(new LoadListener());
+        loadButton.addActionListener(audioListener);
 
         studentName = new JTextField(10);
         studentName.addActionListener(addListener);
@@ -93,10 +101,17 @@ public class SwingClass extends JPanel implements ListSelectionListener {
         description = new JTextField(10);
         description.addActionListener(addListener);
         description.getDocument().addDocumentListener(addListener);
-
     }
 
-    //Create a panel that uses BoxLayout.
+    // EFFECTS: Creates a new JList
+    public void newJlist() {
+        list = new JList(studentList);
+        list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        list.setSelectedIndex(0);
+        list.setVisibleRowCount(5);
+    }
+
+    // EFFECTS: Create a panel that uses BoxLayout and adds all the functionalities to the panel.
     public void createPanelWithBoxLayout() {
         JScrollPane listScrollPane = new JScrollPane(list);
         JPanel buttonPane = new JPanel();
@@ -107,7 +122,9 @@ public class SwingClass extends JPanel implements ListSelectionListener {
         buttonPane.add(Box.createHorizontalStrut(5));
         buttonPane.add(new JSeparator(SwingConstants.VERTICAL));
         buttonPane.add(Box.createHorizontalStrut(5));
+        buttonPane.add(label1);
         buttonPane.add(studentName);
+        buttonPane.add(label2);
         buttonPane.add(description);
         buttonPane.add(addButton);
         buttonPane.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
@@ -116,7 +133,7 @@ public class SwingClass extends JPanel implements ListSelectionListener {
         add(buttonPane, BorderLayout.PAGE_END);
     }
 
-    // EFFECTS: saves the studentName to file
+    // EFFECTS: saves the studentList to file
     private void saveStudentProfile() {
         try {
             jsonWriter.open();
@@ -129,7 +146,7 @@ public class SwingClass extends JPanel implements ListSelectionListener {
     }
 
     // MODIFIES: this
-    // EFFECTS: loads studentName from file
+    // EFFECTS: loads studentList from file
     private void loadStudentProfile() {
         try {
             studentList2 = jsonReader.read();
@@ -139,48 +156,76 @@ public class SwingClass extends JPanel implements ListSelectionListener {
         }
     }
 
+    // EFFECTS: Creates an ActionListener object for save button
     class SaveListener implements ActionListener {
+
+        // EFFECTS: returns the action performed by the save button
         public void actionPerformed(ActionEvent e) {
 
             saveStudentProfile();
 
             int size = studentList.getSize();
 
-            if (size == 0) { //Nobody's left, disable firing.
-                saveButton.setEnabled(false);
-            } else {
-                saveButton.setEnabled(true);
-            }
+            saveButton.setEnabled(size != 0);
         }
     }
 
+    // EFFECTS: Creates an ActionListener object for load button
     class LoadListener implements ActionListener {
+
+        // EFFECTS: returns the action performed by the load button
         public void actionPerformed(ActionEvent e) {
 
             loadStudentProfile();
             refreshStudentList();
+            saveButton.setEnabled(true);
 
             int size = studentList.getSize();
 
             if (size == 0) {
                 loadButton.setEnabled(true);
 
-            } else { //Select an index.
+            } else {
                 loadButton.setEnabled(false);
             }
         }
     }
 
-    //This listener is shared by the text field and the hire button.
+    // EFFECTS: returns an audio note saved in in the computer under soundName;
+    //          Or throws an exception.
+    public void playSound(String soundName) {
+        try {
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(new File(soundName).getAbsoluteFile());
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            clip.start();
+        } catch (Exception ex) {
+            System.out.println("Error with playing sound.");
+            ex.printStackTrace();
+        }
+    }
+
+    // EFFECTS: Creates an Audio ActionListener object for save,load and add buttons
+    class AudioListener implements ActionListener {
+
+        // EFFECTS: returns the action performed/audio note on pressing the buttons
+        public void actionPerformed(ActionEvent e) {
+            playSound("C:\\Users\\Darshan Punjabi\\Desktop\\.wav\\blip.wav");
+        }
+    }
+
+
+    // EFFECTS: Creates an ActionListener object for the add button and the two text fields
     class AddListener implements ActionListener, DocumentListener {
         private boolean alreadyEnabled = false;
         private final JButton button;
 
+        // EFFECTS: Creates an AddListener constructor
         public AddListener(JButton button) {
             this.button = button;
         }
 
-        //Required by ActionListener.
+        // EFFECTS: returns the action performed
         public void actionPerformed(ActionEvent e) {
             String name = studentName.getText();
             String des = description.getText();
@@ -195,7 +240,7 @@ public class SwingClass extends JPanel implements ListSelectionListener {
                 return;
             }
 
-            studentList.addElement(studentName.getText() + " " + description.getText());
+            studentList.addElement(studentName.getText() + " : " + description.getText());
 
             studentName.requestFocusInWindow();
             studentName.setText("");
@@ -205,29 +250,32 @@ public class SwingClass extends JPanel implements ListSelectionListener {
 
         }
 
-        //Required by DocumentListener.
+
+        // EFFECTS: Enables the add button when text is inputted
         public void insertUpdate(DocumentEvent e) {
             enableButton();
         }
 
-        //Required by DocumentListener.
+        // EFFECTS: Disables the add button when no text inputted
         public void removeUpdate(DocumentEvent e) {
             handleEmptyTextField(e);
         }
 
-        //Required by DocumentListener.
+        // EFFECTS: Updates the enable state of the button
         public void changedUpdate(DocumentEvent e) {
             if (!handleEmptyTextField(e)) {
                 enableButton();
             }
         }
 
+        // EFFECTS: Enables functionality of the button
         private void enableButton() {
             if (!alreadyEnabled) {
                 button.setEnabled(true);
             }
         }
 
+        // EFFECTS: Disables functionality of the button
         private boolean handleEmptyTextField(DocumentEvent e) {
             if (e.getDocument().getLength() <= 0) {
                 button.setEnabled(false);
@@ -235,21 +283,6 @@ public class SwingClass extends JPanel implements ListSelectionListener {
                 return true;
             }
             return false;
-        }
-    }
-
-    //This method is required by ListSelectionListener.
-    public void valueChanged(ListSelectionEvent e) {
-        if (!e.getValueIsAdjusting()) {
-
-            if (list.getSelectedIndex() == -1) {
-                //No selection
-                saveButton.setEnabled(false);
-
-            } else {
-                //Selection
-                saveButton.setEnabled(true);
-            }
         }
     }
 }
