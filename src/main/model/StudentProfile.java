@@ -1,5 +1,6 @@
 package model;
 
+import exceptions.NameException;
 import org.json.JSONObject;
 import persistence.Writable;
 
@@ -16,7 +17,10 @@ public class StudentProfile implements Writable {
 
 
     //EFFECTS: returns the field name
-    public String getName() {
+    public String getName() throws NameException {
+        if (this.name.length() >= 25) {
+            throw new NameException();
+        }
         return this.name;
     }
 

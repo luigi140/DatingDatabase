@@ -27,3 +27,8 @@ go out on dates and get to know people in general.
 - *As a user, I should be able to print existing profiles.*
 - *As a user, I should be able to save my work to a file.*
 - *As a user, I should be able to load my work from a file.*
+
+- *Phase 4: Task 2*
+Implemented the first option: "Test and design a class in your model package that is robust."
+Class: StudentProfile ; Method: getName() throws an Exception.
+Class: SwingClass     ; Method: refreshStudentList() handles the Exception.

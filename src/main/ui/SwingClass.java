@@ -1,6 +1,7 @@
 package ui;
 
 
+import exceptions.NameException;
 import model.StudentList;
 import model.StudentProfile;
 import persistence.JsonReader;
@@ -19,7 +20,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 
-
+// Represents the GUI class using Java Swing
 public class SwingClass extends JPanel {
 
     private static final String JSON_STORE = "./data/profiles.json";
@@ -64,10 +65,15 @@ public class SwingClass extends JPanel {
 
     // REQUIRES: a java list of student profiles
     // MODIFIES: this
-    // EFFECTS:  returns a Default List model of student profiles for JList to process
+    // EFFECTS:  returns a Default List model of student profiles for JList to process, or
+    //           throws a name exception
     public void refreshStudentList() {
         for (StudentProfile s : studentList2.getStudentProfiles()) {
-            studentList.addElement(s.getName() + " : " + s.getDescription());
+            try {
+                studentList.addElement(s.getName() + " : " + s.getDescription());
+            } catch (NameException e) {
+                System.out.println("Name too long ... Can't add to Default List!");
+            }
         }
     }
 
@@ -210,7 +216,7 @@ public class SwingClass extends JPanel {
 
         // EFFECTS: returns the action performed/audio note on pressing the buttons
         public void actionPerformed(ActionEvent e) {
-            playSound("C:\\Users\\Darshan Punjabi\\Desktop\\.wav\\blip.wav");
+            playSound("./data/blip.wav");
         }
     }
 
