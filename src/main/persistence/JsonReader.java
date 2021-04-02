@@ -1,6 +1,5 @@
 package persistence;
 
-import exceptions.NameException;
 import model.StudentList;
 import model.StudentProfile;
 import org.json.JSONArray;

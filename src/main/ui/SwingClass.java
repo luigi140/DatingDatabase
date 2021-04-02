@@ -79,7 +79,7 @@ public class SwingClass extends JPanel {
 
     //EFFECTS: Creates the list and puts it in a scroll pane.
     public void listScrollPane() {
-        newJlist();
+        newJList();
 
         addButton = new JButton(addString);
         AddListener addListener = new AddListener(addButton);
@@ -110,7 +110,7 @@ public class SwingClass extends JPanel {
     }
 
     // EFFECTS: Creates a new JList
-    public void newJlist() {
+    public void newJList() {
         list = new JList(studentList);
         list.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         list.setSelectedIndex(0);
