@@ -37,3 +37,16 @@ Class: StudentProfile ; Method: getName() throws an Exception.
 Class: SwingClass     ; Method: refreshStudentList() handles the Exception.
 
 ## Phase 4: Task 3
+
+*UML*
+
+- My UML design looks fairly simple and direct - hence, not much refactoring is required.
+  However, we can make an abstract class with JsonReader and JsonWriter as subclasses.
+  SwingClass and DatingAppNew extend to this abstract class.
+  
+*Other Refactoring*
+
+- Introducing Abstraction in Testing Class: Reducing repetition in code by extracting repetition code into methods.
+
+- Extracting the Listener classes (inside SwingClass) into separate classes in the UI package - for easier code 
+  readability.
